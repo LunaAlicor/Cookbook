@@ -15,15 +15,36 @@ updateCurrentTime();
 
 const themeToggle = document.getElementById("theme-toggle");
 const body = document.body;
+const dropdown = document.getElementById("dropdown");
+
+function setThemeStatus(status) {
+  if (status) {
+    body.classList.add("dark-theme");
+    dropdown.style.backgroundColor = "#333333";
+  } else {
+    body.classList.remove("dark-theme");
+    dropdown.style.backgroundColor = "#fff";
+  }
+}
+
+const storedThemeStatus = localStorage.getItem("themeStatus");
+
+if (storedThemeStatus === "1") {
+  themeToggle.checked = true;
+  setThemeStatus(true);
+} else {
+  themeToggle.checked = false;
+  setThemeStatus(false);
+}
 
 themeToggle.addEventListener("change", () => {
-    if (themeToggle.checked) {
-
-        body.classList.add("dark-theme");
-    } else {
-
-        body.classList.remove("dark-theme");
-    }
+  if (themeToggle.checked) {
+    setThemeStatus(true);
+    localStorage.setItem("themeStatus", "1");
+  } else {
+    setThemeStatus(false);
+    localStorage.setItem("themeStatus", "0");
+  }
 });
 
 
