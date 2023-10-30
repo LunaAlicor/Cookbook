@@ -81,3 +81,26 @@ aside {
 }
 
 
+#sidebar {
+    width: 5%;
+
+    position: absolute;
+
+    /*left: -250px;  *!*/
+    /*transition: left 0.3s; !*  *!*/
+    /*display: flex;*/
+    /*flex-direction: row; !*  *!*/
+    /*justify-content: space-between; !*  *!*/
+    /*align-items: center;*/
+}
+
+#toggleSidebar {
+    position: fixed;
+    height: 50px; /* Увеличьте высоту */
+    width: 50px; /* Увеличьте ширину */
+    margin-top: 2px;
+    opacity: 1; /* Убедитесь, что прозрачность установлена в 1 */
+}
+
+
+

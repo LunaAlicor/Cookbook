@@ -48,3 +48,27 @@ themeToggle.addEventListener("change", () => {
 });
 
 
+document.getElementById("toggleSidebar").addEventListener("click", function() {
+  var sidebar = document.getElementById("sidebar");
+  var firstsidebarbutton = document.getElementById('toggleSidebar');
+  var firstsidebarbutton2 = document.getElementById('toggleSidebar2');
+
+  if (sidebar.style.left === "-250px") {
+    sidebar.style.left = "0"; // Открываем боковую панель
+    sidebar.style.display = 'block';
+    firstsidebarbutton.style.display = "none";
+  } else {
+    sidebar.style.left = "-250px";
+  }
+
+  function resetSidebar() {
+
+    sidebar.style.left = "-250px";
+    sidebar.style.display = 'none';
+    firstsidebarbutton.style.display = "block";
+  }
+
+  firstsidebarbutton2.addEventListener('click', resetSidebar);
+});
+
+
