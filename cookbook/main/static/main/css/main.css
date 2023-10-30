@@ -82,7 +82,7 @@ aside {
 
 
 #sidebar {
-    width: 5%;
+    width: auto;
 
     position: absolute;
 
