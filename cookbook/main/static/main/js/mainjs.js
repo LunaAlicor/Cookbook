@@ -16,14 +16,39 @@ updateCurrentTime();
 const themeToggle = document.getElementById("theme-toggle");
 const body = document.body;
 const dropdown = document.getElementById("dropdown");
+var sidelist = document.getElementById('sidelist');
+var dropdownbutton = document.getElementById('dropdownbutton');
+const cartElements = document.querySelectorAll(".card-header");
+const cardBodyElements = document.querySelectorAll(".card-body");
 
 function setThemeStatus(status) {
   if (status) {
     body.classList.add("dark-theme");
-    dropdown.style.backgroundColor = "#333333";
+    dropdown.style.backgroundColor = "#fff";
+    sidelist.style.background = '#fff';
+    dropdownbutton.style.background = '#fff';
+
+    cartElements.forEach(element => {
+      element.style.background = "#333333";
+    });
+
+    cardBodyElements.forEach(element => {
+      element.style.background = "#333333";
+    });
+
   } else {
     body.classList.remove("dark-theme");
-    dropdown.style.backgroundColor = "#fff";
+    dropdown.style.backgroundColor = "#333333";
+    sidelist.style.background = '#333333';
+    dropdownbutton.style.background = '#333333';
+
+    cartElements.forEach(element => {
+      element.style.background = "#fff";
+    });
+
+    cardBodyElements.forEach(element => {
+      element.style.background = "#fff";
+    });
   }
 }
 
@@ -55,10 +80,15 @@ document.getElementById("toggleSidebar").addEventListener("click", function() {
 
 function openSidebar() {
 
-
+  // const storedThemeStatus = localStorage.getItem("themeStatus");
   sidebar.style.left = "0";
   sidebar.style.display = 'block';
   firstsidebarbutton.style.display = "none";
+  // if (storedThemeStatus === '0'){
+  //   sidelist.style.background = '#fff';
+  // } else {
+  //   sidelist.style.background = '#333333';
+  // }
 }
 
 

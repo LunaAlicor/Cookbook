@@ -1,0 +1,10 @@
+{% extends 'main/base.html' %}
+
+{% block title %}Личный кабинет{% endblock %}
+
+{% block content %}
+    <form method="post" action="{% url 'logout' %}">
+        {% csrf_token %}
+        <button class="logout" type="submit">Выйти</button>
+    </form>
+{% endblock %}
