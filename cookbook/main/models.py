@@ -4,12 +4,12 @@ from django.db import models
 
 
 class Product(models.Model):
-    name = models.CharField(max_length=100)
-    price = models.FloatField()
-    availability = models.BooleanField()
-    quantity = models.IntegerField()
+    name = models.CharField(max_length=200)
+    price = models.FloatField(null=True)
+    availability = models.BooleanField(null=True)
+    quantity = models.IntegerField(null=True)
     date_of_purchase = models.DateField(null=True)
-    expiry_date = models.DateField()
+    expiry_date = models.DateField(null=True)
 
 
 class Recipe(models.Model):

@@ -2,7 +2,14 @@ from django.contrib import admin
 from .models import *
 # Register your models here.
 
-admin.site.register(Product)
+
+class ProductAdmin(admin.ModelAdmin):
+    list_display = ('name', 'price', 'availability', 'quantity', 'date_of_purchase', 'expiry_date')
+    list_filter = ('availability', 'date_of_purchase', 'expiry_date')
+    search_fields = ('name', 'price')
+
+
+admin.site.register(Product, ProductAdmin)
 admin.site.register(InventoryList)
 admin.site.register(Recipe)
 admin.site.register(Recipes)

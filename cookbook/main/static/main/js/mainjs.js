@@ -107,3 +107,16 @@ toggleSidebarButton.addEventListener('click', openSidebar);
 });
 
 
+document.getElementById('update-prices-btn').addEventListener('click', function() {
+    fetch('/update_prices/')
+        .then(response => response.json())
+        .then(data => {
+
+            console.log(data);
+        })
+        .catch(error => {
+            console.error('Произошла ошибка:', error);
+        });
+});
+
+

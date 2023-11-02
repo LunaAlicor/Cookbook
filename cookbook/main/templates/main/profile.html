@@ -7,4 +7,7 @@
         {% csrf_token %}
         <button class="logout" type="submit">Выйти</button>
     </form>
+    {% if user.is_staff %}
+        <button id="update-prices-btn">Обновить цены</button>
+    {% endif %}
 {% endblock %}
