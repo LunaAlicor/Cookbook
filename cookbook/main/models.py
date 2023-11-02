@@ -9,7 +9,7 @@ class Product(models.Model):
     availability = models.BooleanField()
     quantity = models.IntegerField()
     date_of_purchase = models.DateField(null=True)
-    expiry_date = models.TimeField()
+    expiry_date = models.DateField()
 
 
 class Recipe(models.Model):
