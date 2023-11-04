@@ -120,3 +120,29 @@ document.getElementById('update-prices-btn').addEventListener('click', function(
 });
 
 
+$(document).ready(function() {
+    $('#product-search').on('input', function() {
+        var query = $(this).val();
+        if (query) {
+            $.get('/search_product/', {q: query}, function(data) {
+                var results = data.results;
+                var resultHtml = '<ul>';
+                for (var i = 0; i < results.length; i++) {
+                    resultHtml += '<li data-id="' + results[i].id + '">' + results[i].name + '</li>';
+                }
+                resultHtml += '</ul>';
+                $('#search-results').html(resultHtml);
+
+
+                $('#search-results li').on('click', function() {
+                    var productId = $(this).data('id');
+                    var productName = $(this).text();
+                    $('#product-search').val(productName);
+
+                });
+            });
+        } else {
+            $('#search-results').html('');
+        }
+    });
+});

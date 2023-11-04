@@ -2,4 +2,19 @@
 
 {% block title %}Продукты{% endblock %}
 
-{% block content %} {% endblock %}
+{% block content %}
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <input type="submit" value="Add to Inventory">
+    </form>
+
+    <h2>Your Inventory Items</h2>
+    <ul>
+        {% for item in user_inventory %}
+            <li>{{ item.product.name }} - Цена: {{ item.product.price }} - Кол-во: {{ item.quantity }} - Дата покупки: {{ item.date_of_purchase }} - Наличие: {{ item.availability }}</li>
+        {% empty %}
+            <li>Ваш список продуктов пуст</li>
+        {% endfor %}
+    </ul>
+{% endblock %}

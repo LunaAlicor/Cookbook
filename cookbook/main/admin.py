@@ -4,8 +4,8 @@ from .models import *
 
 
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ('name', 'price', 'availability', 'quantity', 'date_of_purchase', 'expiry_date')
-    list_filter = ('availability', 'date_of_purchase', 'expiry_date')
+    list_display = ('name', 'price')
+    # list_filter = ('availability', 'date_of_purchase', 'expiry_date')
     search_fields = ('name', 'price')
 
 

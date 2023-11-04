@@ -3,8 +3,10 @@ from django.contrib.auth.models import User
 from django.contrib import messages
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
-from .forms import CustomAuthenticationForm, RegistrationForm
-from .models import Product
+from django.utils import timezone
+
+from .forms import CustomAuthenticationForm, RegistrationForm, InventoryItemForm
+from .models import Product, InventoryList, InventoryItem
 from selenium import webdriver
 # from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
@@ -21,7 +23,21 @@ def index(request):
 
 
 def products(request):
-    return render(request, 'main/Products.html')
+    if request.method == 'POST':
+        form = InventoryItemForm(request.POST)
+        if form.is_valid():
+
+            item = form.save(commit=False)
+            item.user = request.user
+            item.date_of_purchase = timezone.now()
+            item.availability = True
+            item.save()
+    else:
+        form = InventoryItemForm()
+
+    user_inventory = InventoryItem.objects.filter(user=request.user)
+
+    return render(request, 'main/products.html', {'form': form, 'user_inventory': user_inventory})
 
 
 def login_view(request):
