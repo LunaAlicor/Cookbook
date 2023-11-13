@@ -146,3 +146,33 @@ $(document).ready(function() {
         }
     });
 });
+
+function decreaseQuantity(productId) {
+    console.log('Start decreaseQuantity');
+    $.ajax({
+        url: `/decrease_quantity/${productId}/`,
+        type: 'POST',
+        success: function(data) {
+            console.log('Success:', data);
+            $('#quantity_' + productId).text(data.quantity);
+        },
+        error: function(error) {
+            console.log('Error:', error);
+        }
+    });
+}
+
+function deleteProduct(productId) {
+
+    $.ajax({
+        url: `/delete_product/${productId}/`,
+        type: 'POST',
+        success: function() {
+
+            $('#quantity_' + productId).closest('.custom-item').remove();
+        },
+        error: function(error) {
+            console.log(error);
+        }
+    });
+}

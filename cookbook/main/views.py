@@ -2,8 +2,10 @@ from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.models import User
 from django.contrib import messages
 from django.http import JsonResponse
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.utils import timezone
+from django.db.models import Q
+from django.views.decorators.csrf import csrf_exempt
 
 from .forms import CustomAuthenticationForm, RegistrationForm, InventoryItemForm
 from .models import Product, InventoryList, InventoryItem
@@ -27,20 +29,17 @@ def products(request):
     results = []
 
     if query and request.method == 'GET':
-        
-        results = Product.objects.exclude(inventoryitem__product__name__icontains=query)
+        results = Product.objects.filter(name__icontains=query)
 
     if request.method == 'POST':
         form = InventoryItemForm(request.POST)
         if form.is_valid():
-
             item = form.save(commit=False)
             item.user = request.user
             item.date_of_purchase = timezone.now()
             item.availability = True
             item.save()
             return redirect('products')
-
     else:
         form = InventoryItemForm()
 
@@ -138,3 +137,18 @@ def parse(request):
 
     driver.quit()
     return JsonResponse({"results": results})
+
+
+@csrf_exempt
+def decrease_quantity(request, product_id):
+    item = get_object_or_404(InventoryItem, product_id=product_id, user=request.user)
+    item.quantity -= 1
+    item.save()
+
+
+@csrf_exempt
+def delete_product(request, product_id):
+    item = get_object_or_404(InventoryItem, product_id=product_id, user=request.user)
+    item.delete()
+
+    return JsonResponse({'success': True})

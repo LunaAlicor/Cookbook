@@ -10,7 +10,7 @@ class ProductAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Product, ProductAdmin)
-admin.site.register(InventoryList)
+admin.site.register(InventoryItem)
 admin.site.register(Recipe)
 admin.site.register(Recipes)
 admin.site.register(Shopping_list)

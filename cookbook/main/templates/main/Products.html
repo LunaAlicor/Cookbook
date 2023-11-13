@@ -13,7 +13,7 @@
         <h2>Результаты поиска</h2>
         <ul>
             {% for product in results %}
-                <li>{{ product.name }} - Цена: {{ product.price }}</li>
+                <li>{{ product.name }} - Цена: {{ product.price }} ₽</li>
                 <form method="post" action="{% url 'products' %}">
                     {% csrf_token %}
                     <input type="hidden" name="product" value="{{ product.id }}">
@@ -27,16 +27,38 @@
     <h2>Добавление нового товара в инвентарь</h2>
     <form method="post" action="{% url 'products' %}">
         {% csrf_token %}
-        {{ form.as_p }}
+        <div class="form-group">
+            <label for="{{ form.product.id_for_label }}">Товар:</label>
+            {{ form.product }}
+        </div>
+        <div class="form-group">
+            <label for="{{ form.quantity.id_for_label }}">Количество:</label>
+            {{ form.quantity }}
+        </div>
         <button type="submit">Добавить в инвентарь</button>
     </form>
 
-    <h2>Your Inventory Items</h2>
-    <ul>
-        {% for item in user_inventory %}
-            <li>{{ item.product.name }} - Цена: {{ item.product.price }} - Кол-во: {{ item.quantity }} - Дата покупки: {{ item.date_of_purchase }} - Наличие: {{ item.availability }}</li>
-        {% empty %}
-            <li>Ваш список продуктов пуст</li>
-        {% endfor %}
-    </ul>
+    <div class="custom-container">
+        <h2 class="custom-heading">Ваши продукты</h2>
+        <ul class="custom-list">
+            {% for item in user_inventory %}
+                <li class="custom-item">
+                    {{ item.product.name }}
+                    Цена: {{ item.product.price }} ₽
+                    Кол-во:
+                    <span id="quantity_{{ item.product.id }}">{{ item.quantity }}</span>
+
+                    <!-- Кнопка уменьшения количества -->
+                    <button onclick="decreaseQuantity({{ item.product.id }})">-</button>
+
+                    Дата покупки: {{ item.date_of_purchase }}
+                    Наличие: {{ item.availability }}
+
+                    <button onclick="deleteProduct({{ item.product.id }})">Удалить</button>
+                </li>
+            {% empty %}
+                <li class="custom-item">Ваш список продуктов пуст :(</li>
+            {% endfor %}
+        </ul>
+    </div>
 {% endblock %}
