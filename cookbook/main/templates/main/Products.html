@@ -3,10 +3,32 @@
 {% block title %}Продукты{% endblock %}
 
 {% block content %}
-    <form method="post">
+    <h1>Поиск товара</h1>
+    <form method="get" action="{% url 'products' %}">
+        <input type="text" name="q" value="{{ query }}" placeholder="Введите название товара">
+        <button type="submit">Поиск</button>
+    </form>
+
+    {% if results %}
+        <h2>Результаты поиска</h2>
+        <ul>
+            {% for product in results %}
+                <li>{{ product.name }} - Цена: {{ product.price }}</li>
+                <form method="post" action="{% url 'products' %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="product" value="{{ product.id }}">
+                    <input type="number" name="quantity" placeholder="Введите количество" required>
+                    <button type="submit">Добавить в инвентарь</button>
+                </form>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+    <h2>Добавление нового товара в инвентарь</h2>
+    <form method="post" action="{% url 'products' %}">
         {% csrf_token %}
         {{ form.as_p }}
-        <input type="submit" value="Add to Inventory">
+        <button type="submit">Добавить в инвентарь</button>
     </form>
 
     <h2>Your Inventory Items</h2>

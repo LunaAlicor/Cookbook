@@ -23,6 +23,13 @@ def index(request):
 
 
 def products(request):
+    query = request.GET.get('q', '')
+    results = []
+
+    if query and request.method == 'GET':
+        
+        results = Product.objects.exclude(inventoryitem__product__name__icontains=query)
+
     if request.method == 'POST':
         form = InventoryItemForm(request.POST)
         if form.is_valid():
@@ -32,12 +39,14 @@ def products(request):
             item.date_of_purchase = timezone.now()
             item.availability = True
             item.save()
+            return redirect('products')
+
     else:
         form = InventoryItemForm()
 
     user_inventory = InventoryItem.objects.filter(user=request.user)
 
-    return render(request, 'main/products.html', {'form': form, 'user_inventory': user_inventory})
+    return render(request, 'main/products.html', {'form': form, 'user_inventory': user_inventory, 'results': results, 'query': query})
 
 
 def login_view(request):
