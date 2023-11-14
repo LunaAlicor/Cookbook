@@ -13,8 +13,7 @@ chrome_options.add_argument("--headless")
 
 urls = [
     'zamorozka-3e94909/morozhenoe-sladosti-5810632',
-    'bakaleya/makaroni-6a87353',
-    'sladosti_new/pechene-pryaniki-vafli-ce67498',
+
     'kolbasi-sosiski-delikatesy/kolbasi',
     'riba-ikra-dari-morya-31ba8ac/riiba',
     'sousi-spetsii-maslo/sousi-zapravki',
@@ -31,7 +30,7 @@ driver = webdriver.Chrome(options=chrome_options)
 for url_suffix in urls:
     for page in range(1, 41):
         skip_check = []
-        url = f'https://sbermarket.ru/5ka/c/{url_suffix}?page={page}'
+        url = f'https://sbermarket.ru/lenta/c/{url_suffix}?page={page}'
         driver.get(url)
         WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.TAG_NAME, 'body')))
 
@@ -43,15 +42,15 @@ for url_suffix in urls:
 
         soup = BeautifulSoup(page_source, 'html.parser')
 
-        product_cards = soup.find_all(class_='ProductCard_root__K6IZK ProductCard_addToCartBig__h5PsY')
-        skip_check = soup.find_all(class_="ProductsGrid_noProducts___TVHi")
+        product_cards = soup.find_all(class_='ProductCard_root__zO_B9 ProductCard_addToCartBig__mmVRI')
+        skip_check = soup.find_all(class_="ProductsGrid_noProducts__lcZRk")
 
         if skip_check != []:
             break
 
         for card in product_cards:
-            title = card.find(class_='ProductCard_title__iNsaD').text
-            price = card.find(class_='ProductCardPrice_price__Kv7Q7').text.replace('Цена за 1 шт.', '')
+            title = card.find(class_='ProductCard_title__iB_Dr').text
+            price = card.find(class_='ProductCardPrice_price__zSwp0').text.replace('Цена за 1 шт.', '')
             price = price.replace(',', '.')
 
             if "Цена со скидкой за 1 шт." in price:
@@ -68,6 +67,8 @@ for url_suffix in urls:
             if "/" in price:
                 price.split('/')
                 price = price[0]
+
+            price = price.replace(' ', '')
             # Product.objects.create(name=title, price=price)
             print(f"Название: {title}, Цена: {price.replace('₽', '')}")
 

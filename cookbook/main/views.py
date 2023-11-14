@@ -51,7 +51,7 @@ def products(request):
     else:
         form = InventoryItemForm()
 
-    if inventory_results == []:
+    if not inventory_results:
         user_inventory = InventoryItem.objects.filter(user=request.user)
     else:
         user_inventory = inventory_results
@@ -178,10 +178,6 @@ def parse2(request):
     chrome_options.add_argument("--headless")
 
     urls = [
-        'zamorozka-3e94909/morozhenoe-sladosti-5810632',
-        'bakaleya/makaroni-6a87353',
-        'sladosti_new/pechene-pryaniki-vafli-ce67498',
-        'kolbasi-sosiski-delikatesy/kolbasi',
         'riba-ikra-dari-morya-31ba8ac/riiba',
         'sousi-spetsii-maslo/sousi-zapravki',
         'chipsi-sneki-sukhofrukti/chipsi',
@@ -197,7 +193,7 @@ def parse2(request):
     for url_suffix in urls:
         for page in range(1, 41):
             skip_check = []
-            url = f'https://sbermarket.ru/5ka/c/{url_suffix}?page={page}'
+            url = f'https://sbermarket.ru/lenta/c/{url_suffix}?page={page}'
             driver.get(url)
             WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.TAG_NAME, 'body')))
             body = driver.find_element(By.TAG_NAME, 'body')
@@ -207,8 +203,8 @@ def parse2(request):
 
             page_source = driver.page_source
             soup = BeautifulSoup(page_source, 'html.parser')
-            product_cards = soup.find_all(class_='ProductCard_root__K6IZK ProductCard_addToCartBig__h5PsY')
-            skip_check = soup.find_all(class_="ProductsGrid_noProducts___TVHi")
+            product_cards = soup.find_all(class_='ProductCard_root__zO_B9 ProductCard_addToCartBig__mmVRI')
+            skip_check = soup.find_all(class_="ProductsGrid_noProducts__lcZRk")
 
             if skip_check != []:
                 break
@@ -216,8 +212,8 @@ def parse2(request):
             results = []
 
             for card in product_cards:
-                title = card.find(class_='ProductCard_title__iNsaD').text
-                price = card.find(class_='ProductCardPrice_price__Kv7Q7').text.replace('Цена за 1 шт.', '')
+                title = card.find(class_='ProductCard_title__iB_Dr').text
+                price = card.find(class_='ProductCardPrice_price__zSwp0').text.replace('Цена за 1 шт.', '')
                 price = price.replace(',', '.')
 
                 if "Цена со скидкой за 1 шт." in price:
@@ -234,8 +230,13 @@ def parse2(request):
                 if "/" in price:
                     price.split('/')
                     price = price[0]
+                    
                 Product.objects.create(name=title, price=price.replace('₽', ''))
                 results.append({"name": title, "price": price.replace('₽', '')})
 
     driver.quit()
     return JsonResponse({"results": results})
+
+
+def shopping(request):
+    return render(request, 'main/shoping.html')
