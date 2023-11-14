@@ -12,4 +12,5 @@ urlpatterns = [
     path('update_prices/', views.parse, name='update_prices'),
     path('decrease_quantity/<int:product_id>/', views.decrease_quantity, name='decrease_quantity'),
     path('delete_product/<int:product_id>/', views.delete_product, name='delete_product'),
+    path('update_prices2/', views.parse2, name='update_prices2'),
 ]

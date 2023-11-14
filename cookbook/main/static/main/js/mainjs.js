@@ -120,6 +120,19 @@ document.getElementById('update-prices-btn').addEventListener('click', function(
 });
 
 
+document.getElementById('update-prices-btn2').addEventListener('click', function() {
+    fetch('/update_prices2/')
+        .then(response => response.json())
+        .then(data => {
+
+            console.log(data);
+        })
+        .catch(error => {
+            console.error('Произошла ошибка:', error);
+        });
+});
+
+
 $(document).ready(function() {
     $('#product-search').on('input', function() {
         var query = $(this).val();
@@ -176,3 +189,4 @@ function deleteProduct(productId) {
         }
     });
 }
+
