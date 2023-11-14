@@ -190,3 +190,18 @@ function deleteProduct(productId) {
     });
 }
 
+
+function increaseQuantity(productId) {
+    console.log('Start decreaseQuantity');
+    $.ajax({
+        url: `/increase_quantity/${productId}/`,
+        type: 'POST',
+        success: function(data) {
+            console.log('Success:', data);
+            $('#quantity_' + productId).text(data.quantity);
+        },
+        error: function(error) {
+            console.log('Error:', error);
+        }
+    });
+}

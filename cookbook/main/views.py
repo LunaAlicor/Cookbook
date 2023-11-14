@@ -6,7 +6,6 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.utils import timezone
 from django.db.models import Q
 from django.views.decorators.csrf import csrf_exempt
-
 from .filters import InventoryItemFilter
 from .forms import CustomAuthenticationForm, RegistrationForm, InventoryItemForm
 from .models import Product, InventoryList, InventoryItem
@@ -27,10 +26,18 @@ def index(request):
 
 def products(request):
     query = request.GET.get('q', '')
+    inventory_query = request.GET.get('inventory_q', '')
+    inventory_results = []
     results = []
 
     if query and request.method == 'GET':
         results = Product.objects.filter(name__icontains=query)
+
+    if inventory_query and request.method == 'GET':
+        inventory_results = InventoryItem.objects.filter(
+            Q(product__name__icontains=inventory_query) &
+            Q(user=request.user)
+        )
 
     if request.method == 'POST':
         form = InventoryItemForm(request.POST)
@@ -44,9 +51,13 @@ def products(request):
     else:
         form = InventoryItemForm()
 
-    user_inventory = InventoryItem.objects.filter(user=request.user)
+    if inventory_results == []:
+        user_inventory = InventoryItem.objects.filter(user=request.user)
+    else:
+        user_inventory = inventory_results
 
-    return render(request, 'main/products.html', {'form': form, 'user_inventory': user_inventory, 'results': results, 'query': query})
+    return render(request, 'main/products.html', {'form': form, 'user_inventory': user_inventory, 'results': results,
+                                                  'query': query, 'inventory_results': inventory_results,})
 
 
 def login_view(request):
@@ -144,6 +155,13 @@ def parse(request):
 def decrease_quantity(request, product_id):
     item = get_object_or_404(InventoryItem, product_id=product_id, user=request.user)
     item.quantity -= 1
+    item.save()
+
+
+@csrf_exempt
+def increase_quantity(request, product_id):
+    item = get_object_or_404(InventoryItem, product_id=product_id, user=request.user)
+    item.quantity += 1
     item.save()
 
 

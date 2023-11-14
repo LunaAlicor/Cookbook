@@ -36,7 +36,7 @@ class InventoryItem(models.Model):
 
 class InventoryList(models.Model):
     user = models.ForeignKey(User, null=True, on_delete=models.CASCADE)
-    products = models.ManyToManyField(Product)
+    products = models.ManyToManyField(InventoryItem)
 
 
 class Shopping_list(models.Model):
