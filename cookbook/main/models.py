@@ -39,9 +39,18 @@ class InventoryList(models.Model):
     products = models.ManyToManyField(InventoryItem)
 
 
+class Shopping_list_item(models.Model):
+    user = models.ForeignKey(User, null=True, on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    quantity = models.IntegerField(null=True)
+
+
 class Shopping_list(models.Model):
     user = models.ForeignKey(User, null=True, on_delete=models.CASCADE)
-    products = models.ManyToManyField(Product)
+    items = models.ManyToManyField(Shopping_list_item, related_name='shopping_lists')
+
+    def all_items(self):
+        return self.items.all()
 
 
 class Check_list(models.Model):

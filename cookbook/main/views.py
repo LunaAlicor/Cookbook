@@ -8,7 +8,7 @@ from django.db.models import Q
 from django.views.decorators.csrf import csrf_exempt
 from .filters import InventoryItemFilter
 from .forms import CustomAuthenticationForm, RegistrationForm, InventoryItemForm
-from .models import Product, InventoryList, InventoryItem
+from .models import Product, InventoryList, InventoryItem, Shopping_list_item
 from selenium import webdriver
 # from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
@@ -230,7 +230,7 @@ def parse2(request):
                 if "/" in price:
                     price.split('/')
                     price = price[0]
-                    
+
                 Product.objects.create(name=title, price=price.replace('₽', ''))
                 results.append({"name": title, "price": price.replace('₽', '')})
 
@@ -239,4 +239,30 @@ def parse2(request):
 
 
 def shopping(request):
-    return render(request, 'main/shoping.html')
+    query = request.GET.get('q', '')
+    results = []
+    user_inventory = Shopping_list_item.objects.filter(user=request.user)
+    if query and request.method == 'GET':
+        results = Product.objects.filter(name__icontains=query)
+
+    if request.method == 'POST':
+        product_id = request.POST.get('product_id')
+        quantity = request.POST.get('quantity')
+        if product_id and quantity:
+            product = Product.objects.get(pk=product_id)
+            shopping_item, created = Shopping_list_item.objects.get_or_create(user=request.user, product=product)
+            if created:
+                shopping_item.quantity = int(quantity)
+
+            shopping_item.save()
+
+    return render(request, 'main/shoping.html', {
+        'results': results,
+        'user_inventory': user_inventory,
+    })
+
+
+def remove_from_shopping_list(request, item_id):
+    shopping_item = get_object_or_404(Shopping_list_item, id=item_id, user=request.user)
+    shopping_item.delete()
+    return redirect('shopping')

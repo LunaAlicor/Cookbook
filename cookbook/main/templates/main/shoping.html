@@ -3,5 +3,45 @@
 {% block title %}Список покупок{% endblock %}
 
 {% block content %}
-hello world
+    <h1>Поиск товара</h1>
+    <form method="get" action="{% url 'shopping' %}">
+        <input type="text" name="q" value="{{ query }}" placeholder="Введите название товара">
+        <button type="submit">Поиск</button>
+    </form>
+
+    {% if results %}
+        <h2>Результаты поиска</h2>
+        <ul>
+            {% for product in results %}
+                <li>
+                    {{ product.name }} - Цена: {{ product.price }} ₽
+                    <form method="post" action="{% url 'shopping' %}">
+                        {% csrf_token %}
+                        <input type="hidden" name="product_id" value="{{ product.id }}">
+                        <input type="number" name="quantity" placeholder="Введите количество" required>
+                        <button type="submit">Добавить в список покупок</button>
+                    </form>
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+<div class="custom-container">
+        <a href="{% url 'shopping' %}">
+            <button>Сбросить поиск</button>
+        </a>
+        <h2 class="custom-heading">Ваш список покупок</h2>
+        <ul class="custom-list">
+            {% for item in user_inventory %}
+                <li class="custom-item">
+                    {{ item.product.name }} - Цена: {{ item.product.price }} ₽ - Количество: {{ item.quantity }}
+                    <form method="post" action="{% url 'remove_from_shopping_list' item.id %}">
+                        {% csrf_token %}
+                        <button type="submit">Удалить</button>
+                    </form>
+                </li>
+            {% empty %}
+                <li class="custom-item">Ваш список покупок пуст :(</li>
+            {% endfor %}
+        </ul>
+</div>
 {% endblock %}
