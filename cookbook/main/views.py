@@ -29,6 +29,7 @@ def products(request):
     inventory_query = request.GET.get('inventory_q', '')
     inventory_results = []
     results = []
+    shop_list = Shopping_list_item.objects.filter(user=request.user)
 
     if query and request.method == 'GET':
         results = Product.objects.filter(name__icontains=query)
