@@ -58,7 +58,8 @@ def products(request):
         user_inventory = inventory_results
 
     return render(request, 'main/products.html', {'form': form, 'user_inventory': user_inventory, 'results': results,
-                                                  'query': query, 'inventory_results': inventory_results,})
+                                                  'query': query, 'inventory_results': inventory_results,
+                                                  'shop_list':shop_list})
 
 
 def login_view(request):
@@ -267,3 +268,12 @@ def remove_from_shopping_list(request, item_id):
     shopping_item = get_object_or_404(Shopping_list_item, id=item_id, user=request.user)
     shopping_item.delete()
     return redirect('shopping')
+
+
+def remove_from_shopping_list_in_products(request, item_id):
+    shopping_item = get_object_or_404(Shopping_list_item, id=item_id, user=request.user)
+    item = InventoryItem(user=request.user, product=shopping_item.product, availability=True,
+                         quantity=shopping_item.quantity, date_of_purchase=timezone.now())
+    item.save()
+    shopping_item.delete()
+    return redirect('products')

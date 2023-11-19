@@ -23,6 +23,22 @@
             {% endfor %}
         </ul>
     {% endif %}
+    <div class="custom-container">
+        <h2>Добавить из списка покупок</h2>
+                <ul class="custom-list">
+            {% for item in shop_list %}
+                <li class="custom-item">
+                    {{ item.product.name }} - Цена: {{ item.product.price }} ₽ - Количество: {{ item.quantity }}
+                    <form method="post" action="{% url 'remove_from_shopping_list_in_products' item.id %}">
+                        {% csrf_token %}
+                        <button type="submit">Добавить из списка покупок</button>
+                    </form>
+                </li>
+            {% empty %}
+                <li class="custom-item">Ваш список покупок пуст :(</li>
+            {% endfor %}
+        </ul>
+    </div>
 
     <h2>Добавление нового товара в инвентарь</h2>
     <form method="post" action="{% url 'products' %}">
