@@ -1,0 +1,16 @@
+{% extends 'main/base.html' %}
+
+{% block title %}Рецепт {% endblock %}
+
+{% block content %}
+<h1>{{ recipe.name }}</h1>
+<h2>Необходимые ингридиенты: </h2>
+    {% for product in recipe.products.all %}
+        <li>{{ product.name }}</li>
+    {% endfor %}
+    Общая стоимость блюда:
+
+<h2>{{recipe.recipe}}</h2>
+<h3>Время готовки: {{ recipe.cooking_time|time:"h:i a" }}</h3>
+
+{% endblock %}

@@ -1,0 +1,19 @@
+{% extends 'main/base.html' %}
+
+{% block title %}Рецепты {% endblock %}
+
+{% block content %}
+{% if user_recipes %}
+    <ul>
+
+        {% for item in user_recipes %}
+            <li>{{ item.name }}</li>
+            {{ item.description}}
+            <button type="button" onclick="location.href='recipe_detail/{{ item.id }}'">Перейти к рецепту</button>
+            <button>Удалить рецепт</button>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>Нет доступных рецептов</p>
+{% endif %}
+{% endblock %}

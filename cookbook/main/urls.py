@@ -16,4 +16,7 @@ urlpatterns = [
     path('shopping', views.shopping, name='shopping'),
     path('remove/<int:item_id>/', views.remove_from_shopping_list, name='remove_from_shopping_list'),
     path('remove_from_shopping_list_in_products/<int:item_id>/', views.remove_from_shopping_list_in_products, name='remove_from_shopping_list_in_products'),
+    path('Recipes', views.recipes, name='Recipes'),
+    path('all_recipes', views.all_recipes, name='all_recipes'),
+    path('recipe_detail/<int:recipe_id>/', views.recipe_detail, name='recipe_detail'),
 ]

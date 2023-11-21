@@ -8,7 +8,7 @@ from django.db.models import Q
 from django.views.decorators.csrf import csrf_exempt
 from .filters import InventoryItemFilter
 from .forms import CustomAuthenticationForm, RegistrationForm, InventoryItemForm
-from .models import Product, InventoryList, InventoryItem, Shopping_list_item
+from .models import Product, InventoryList, InventoryItem, Shopping_list_item, Recipe, Recipes
 from selenium import webdriver
 # from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
@@ -277,3 +277,23 @@ def remove_from_shopping_list_in_products(request, item_id):
     item.save()
     shopping_item.delete()
     return redirect('products')
+
+
+def recipes(request):
+    user_recipe_objects = Recipes.objects.filter(user=request.user)
+    user_recipes = []
+
+    for user_recipe in user_recipe_objects:
+        user_recipes.extend(list(user_recipe.recipes.all()))
+
+    return render(request, 'main/Recipes.html', {'user_recipes': user_recipes})
+
+
+def recipe_detail(request, recipe_id):
+    recipe = get_object_or_404(Recipe, id=recipe_id)
+    return render(request, 'main/recipe_detail.html', {'recipe': recipe})
+
+
+def all_recipes(request):
+    recipes = Recipe.objects.all()
+    return render(request, 'main/all_recipes.html', {'recipes': recipes})

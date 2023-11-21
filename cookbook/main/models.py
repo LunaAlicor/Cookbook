@@ -13,11 +13,14 @@ class Product(models.Model):
 
 class Recipe(models.Model):
     name = models.CharField(max_length=100)
+    recipe = models.TextField(default='1)\n2)\n3)\n4)\n5)\n')
     products = models.ManyToManyField(Product)
     cooking_time = models.TimeField()
     cuisine = models.CharField(max_length=50)
     classification = models.CharField(max_length=50)
     likes = models.IntegerField(default=0)
+    description = models.TextField(null=True, max_length=500)
+    # Добавить автора рецепта
 
 
 class Recipes(models.Model):
