@@ -1,6 +1,21 @@
-from django.urls import path
+from django.urls import path, include
 from . import views
 from django_select2.views import AutoResponseView
+from rest_framework.routers import DefaultRouter
+from rest_framework.documentation import include_docs_urls
+
+from .views import ProductViewSet, RecipeViewSet, RecipesViewSet, InventoryItemViewSet, InventoryListViewSet, \
+    Shopping_list_itemViewSet, Shopping_listViewSet, ProductSearchAPIView
+
+router = DefaultRouter()
+router.register(r'product', ProductViewSet)
+router.register(r'comments', RecipeViewSet)
+router.register(r'likes', RecipesViewSet)
+router.register(r'events', InventoryItemViewSet)
+router.register(r'tags', InventoryListViewSet)
+router.register(r'teams', Shopping_list_itemViewSet)
+router.register(r'memberships', Shopping_listViewSet)
+
 
 urlpatterns = [
     path('', views.index, name='index'),
@@ -21,5 +36,8 @@ urlpatterns = [
     path('all_recipes', views.all_recipes, name='all_recipes'),
     path('recipe_detail/<int:recipe_id>/', views.recipe_detail, name='recipe_detail'),
     path('create_recipe', views.create_recipe, name='create_recipe'),
+    path('api/', include(router.urls)),
+    path('api/docs/', include_docs_urls(title='API Documentation')),
+    path('api/products/', ProductSearchAPIView.as_view(), name='product_search'),
     # path('select2/', AutoResponseView.as_view(), name='django_select2'),
 ]

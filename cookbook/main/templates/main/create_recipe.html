@@ -3,10 +3,83 @@
 {% block title %}Создать рецепт{% endblock %}
 
 {% block content %}
-  <h2>Создать новый рецепт</h2>
-  <form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Сохранить</button>
-  </form>
+    <h1>Создать рецепт</h1>
+    <form id="recipeForm">
+        <label for="recipeName">Название рецепта:</label>
+        <input type="text" id="recipeName" name="recipeName"><br><br>
+
+        <label for="cookingTime">Время приготовления:</label>
+        <input type="time" id="cookingTime" name="cookingTime"><br><br>
+
+        <label for="cuisine">Кухня:</label>
+        <input type="text" id="cuisine" name="cuisine"><br><br>
+
+        <label for="classification">Классификация:</label>
+        <input type="text" id="classification" name="classification"><br><br>
+
+        <label for="description">Описание:</label><br>
+        <textarea id="description" name="description" rows="4" cols="50"></textarea><br><br>
+
+        <label for="productInput">Добавить продукт:</label>
+        <input type="text" id="productInput">
+        <button type="button" onclick="searchProducts()">Поиск</button><br><br>
+
+        <ul id="productList"></ul>
+
+        <input type="submit" value="Сохранить рецепт">
+    </form>
+
+    <script>
+        function searchProducts() {
+            const query = document.getElementById('productInput').value;
+            if (query.trim() !== '') {
+                fetch(`/api/products/?name=${query}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        displayProducts(data);
+                    })
+                    .catch(error => {
+                        console.error('Ошибка при поиске продуктов:', error);
+                    });
+            }
+        }
+
+        function displayProducts(products) {
+            const productList = document.getElementById('productList');
+            productList.innerHTML = '';
+
+            products.forEach(product => {
+                const listItem = document.createElement('li');
+                listItem.textContent = product.name;
+
+                const addButton = document.createElement('button');
+                addButton.textContent = 'Добавить в рецепт';
+                addButton.onclick = function() {
+                    addProductToRecipe(product.id, product.name);
+                };
+
+                listItem.appendChild(addButton);
+                productList.appendChild(listItem);
+            });
+        }
+
+        function addProductToRecipe(productId, productName) {
+            // Логика добавления выбранного продукта к рецепту через API
+            // Напишите эту функцию в соответствии с вашими запросами к API
+            // Например, используя fetch или другой метод
+
+            // Пример:
+            fetch(`/api/recipes/${recipeId}/add_product/?product_id=${productId}`, {
+                method: 'POST',
+                // Добавьте другие параметры запроса при необходимости
+            })
+            .then(response => {
+                // Обработка успешного добавления продукта к рецепту
+                console.log('Продукт успешно добавлен к рецепту:', productName);
+            })
+            .catch(error => {
+                console.error('Ошибка при добавлении продукта к рецепту:', error);
+            });
+        }
+    </script>
 {% endblock %}

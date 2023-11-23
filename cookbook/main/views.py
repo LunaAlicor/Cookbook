@@ -5,10 +5,11 @@ from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.utils import timezone
 from django.db.models import Q
+from django.views import View
 from django.views.decorators.csrf import csrf_exempt
 from .filters import InventoryItemFilter
 from .forms import CustomAuthenticationForm, RegistrationForm, InventoryItemForm, RecipeForm
-from .models import Product, InventoryList, InventoryItem, Shopping_list_item, Recipe, Recipes
+from .models import Product, InventoryList, InventoryItem, Shopping_list_item, Recipe, Recipes, Shopping_list
 from selenium import webdriver
 # from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
@@ -18,7 +19,12 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from django_select2.forms import ModelSelect2MultipleWidget
-# Create your views here.
+from rest_framework.response import Response
+from .serializers import ProductSerializer, RecipesSerializer, InventoryItemSerializer, InventoryListSerializer, \
+    Shopping_list_itemSerializer, Shopping_listSerializer
+from rest_framework import viewsets
+from rest_framework import status
+from rest_framework.views import APIView
 
 
 def index(request):
@@ -300,6 +306,7 @@ def all_recipes(request):
     return render(request, 'main/all_recipes.html', {'recipes': recipes})
 
 
+@csrf_exempt
 def create_recipe(request):
     if request.method == 'POST':
         form = RecipeForm(request.POST)
@@ -315,3 +322,49 @@ def create_recipe(request):
         form = RecipeForm()
 
     return render(request, 'main/create_recipe.html', {'form': form})
+
+
+class ProductViewSet(viewsets.ModelViewSet):
+    queryset = Product.objects.all()
+    serializer_class = ProductSerializer
+
+
+class RecipeViewSet(viewsets.ModelViewSet):
+    queryset = Recipe.objects.all()
+    serializer_class = ProductSerializer
+
+
+class RecipesViewSet(viewsets.ModelViewSet):
+    queryset = Recipes.objects.all()
+    serializer_class = RecipesSerializer
+
+
+class InventoryItemViewSet(viewsets.ModelViewSet):
+    queryset = InventoryItem.objects.all()
+    serializer_class = InventoryItemSerializer
+
+
+class InventoryListViewSet(viewsets.ModelViewSet):
+    queryset = InventoryList.objects.all()
+    serializer_class = InventoryListSerializer
+
+
+class Shopping_list_itemViewSet(viewsets.ModelViewSet):
+    queryset = Shopping_list_item.objects.all()
+    serializer_class = Shopping_list_itemSerializer
+
+
+class Shopping_listViewSet(viewsets.ModelViewSet):
+    queryset = Shopping_list.objects.all()
+    serializer_class = Shopping_listSerializer
+
+
+class ProductSearchAPIView(APIView):
+    def get(self, request):
+        query = request.GET.get('name')
+        if query:
+            products = Product.objects.filter(name__icontains=query)
+            serializer = ProductSerializer(products, many=True)
+            return Response(serializer.data)
+        else:
+            return Response("No query provided", status=status.HTTP_400_BAD_REQUEST)
