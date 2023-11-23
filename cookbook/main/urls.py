@@ -1,5 +1,6 @@
 from django.urls import path
 from . import views
+from django_select2.views import AutoResponseView
 
 urlpatterns = [
     path('', views.index, name='index'),
@@ -19,4 +20,6 @@ urlpatterns = [
     path('Recipes', views.recipes, name='Recipes'),
     path('all_recipes', views.all_recipes, name='all_recipes'),
     path('recipe_detail/<int:recipe_id>/', views.recipe_detail, name='recipe_detail'),
+    path('create_recipe', views.create_recipe, name='create_recipe'),
+    # path('select2/', AutoResponseView.as_view(), name='django_select2'),
 ]

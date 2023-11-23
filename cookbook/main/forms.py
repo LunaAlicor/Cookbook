@@ -1,9 +1,9 @@
 import datetime
-
+from django_select2.forms import ModelSelect2MultipleWidget, Select2MultipleWidget
 from django import forms
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.contrib.auth.models import User
-from .models import Product, InventoryItem
+from .models import Product, InventoryItem, Recipe
 
 
 class CustomAuthenticationForm(AuthenticationForm):
@@ -30,3 +30,15 @@ class InventoryItemForm(forms.ModelForm):
     class Meta:
         model = InventoryItem
         fields = ['product', 'quantity']
+
+
+class RecipeForm(forms.ModelForm):
+    products = forms.ModelMultipleChoiceField(
+        queryset=Product.objects.all(),
+        widget=Select2MultipleWidget,
+        required=False,
+    )
+
+    class Meta:
+        model = Recipe
+        exclude = []

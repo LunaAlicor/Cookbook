@@ -6,7 +6,7 @@
 <h1>{{ recipe.name }}</h1>
 <h2>Необходимые ингридиенты: </h2>
     {% for product in recipe.products.all %}
-        <li>{{ product.name }}</li>
+        <li>{{ product.name }} | цена: {{product.price}}</li>
     {% endfor %}
     Общая стоимость блюда:
 

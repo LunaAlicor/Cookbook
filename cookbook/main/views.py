@@ -7,7 +7,7 @@ from django.utils import timezone
 from django.db.models import Q
 from django.views.decorators.csrf import csrf_exempt
 from .filters import InventoryItemFilter
-from .forms import CustomAuthenticationForm, RegistrationForm, InventoryItemForm
+from .forms import CustomAuthenticationForm, RegistrationForm, InventoryItemForm, RecipeForm
 from .models import Product, InventoryList, InventoryItem, Shopping_list_item, Recipe, Recipes
 from selenium import webdriver
 # from selenium.webdriver.common.by import By
@@ -17,6 +17,7 @@ from bs4 import BeautifulSoup
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from django_select2.forms import ModelSelect2MultipleWidget
 # Create your views here.
 
 
@@ -297,3 +298,20 @@ def recipe_detail(request, recipe_id):
 def all_recipes(request):
     recipes = Recipe.objects.all()
     return render(request, 'main/all_recipes.html', {'recipes': recipes})
+
+
+def create_recipe(request):
+    if request.method == 'POST':
+        form = RecipeForm(request.POST)
+        if form.is_valid():
+            recipe = form.save(commit=False)
+            recipe.save()
+            current_user = request.user
+            user_recipes, created = Recipes.objects.get_or_create(user=current_user)
+            user_recipes.recipes.add(recipe)
+            form.save_m2m()
+            return redirect('recipe_detail', recipe_id=recipe.id)
+    else:
+        form = RecipeForm()
+
+    return render(request, 'main/create_recipe.html', {'form': form})

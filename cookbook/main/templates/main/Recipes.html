@@ -3,6 +3,7 @@
 {% block title %}Рецепты {% endblock %}
 
 {% block content %}
+<a href="{% url 'create_recipe' %}"><button>Создать рецепт</button></a>
 {% if user_recipes %}
     <ul>
 
