@@ -22,10 +22,16 @@ class Recipe(models.Model):
     description = models.TextField(null=True, max_length=500)
     # Добавить автора рецепта
 
+    def __str__(self):
+        return self.name
+
 
 class Recipes(models.Model):
     user = models.ForeignKey(User, null=True, on_delete=models.CASCADE)
     recipes = models.ManyToManyField(Recipe)
+
+    def __str__(self):
+        return str(self.user)
 
 
 class InventoryItem(models.Model):
@@ -36,10 +42,16 @@ class InventoryItem(models.Model):
     date_of_purchase = models.DateField(null=True)
     expiry_date = models.DateField(null=True)
 
+    def __str__(self):
+        return str(f'InventoryItem {self.user} {self.product.name}')
+
 
 class InventoryList(models.Model):
     user = models.ForeignKey(User, null=True, on_delete=models.CASCADE)
     products = models.ManyToManyField(InventoryItem)
+
+    def __str__(self):
+        return str(self.user)
 
 
 class Shopping_list_item(models.Model):
@@ -54,6 +66,9 @@ class Shopping_list(models.Model):
 
     def all_items(self):
         return self.items.all()
+
+    def __str__(self):
+        return str(self.user)
 
 
 class Check_list(models.Model):

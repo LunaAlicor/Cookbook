@@ -26,12 +26,19 @@
 
         <ul id="productList"></ul>
 
+        <h3>Добавленные продукты в рецепт:</h3>
+        <ul id="addedProducts"></ul>
+
         <input type="submit" value="Сохранить рецепт">
     </form>
 
     <script>
+        let searchQuery = ''; // Переменная для хранения поискового запроса
+
         function searchProducts() {
             const query = document.getElementById('productInput').value;
+            searchQuery = query; // Сохраняем запрос в переменную
+
             if (query.trim() !== '') {
                 fetch(`/api/products/?name=${query}`)
                     .then(response => response.json())
@@ -64,22 +71,37 @@
         }
 
         function addProductToRecipe(productId, productName) {
-            // Логика добавления выбранного продукта к рецепту через API
-            // Напишите эту функцию в соответствии с вашими запросами к API
-            // Например, используя fetch или другой метод
-
-            // Пример:
             fetch(`/api/recipes/${recipeId}/add_product/?product_id=${productId}`, {
                 method: 'POST',
-                // Добавьте другие параметры запроса при необходимости
             })
             .then(response => {
-                // Обработка успешного добавления продукта к рецепту
                 console.log('Продукт успешно добавлен к рецепту:', productName);
+
+                // После успешного добавления обновляем список добавленных продуктов в рецепт
+                updateAddedProducts();
             })
             .catch(error => {
                 console.error('Ошибка при добавлении продукта к рецепту:', error);
             });
         }
+
+        function updateAddedProducts() {
+            // Запрос на получение добавленных продуктов в рецепт и их отображение
+            // Напишите соответствующий запрос к вашему API для получения списка добавленных продуктов
+            // и обновления содержимого списка с id "addedProducts"
+
+            // Пример обновления списка (добавлены данные для демонстрации)
+            const addedProductsList = document.getElementById('addedProducts');
+            addedProductsList.innerHTML = '';
+
+            const addedProduct = document.createElement('li');
+            addedProduct.textContent = 'Добавленный продукт 1';
+            addedProductsList.appendChild(addedProduct);
+
+            // Повторите этот шаблон для каждого добавленного продукта
+        }
+
+        // При загрузке страницы обновляем список добавленных продуктов в рецепт
+        window.onload = updateAddedProducts;
     </script>
 {% endblock %}

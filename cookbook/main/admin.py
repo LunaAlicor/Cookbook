@@ -9,9 +9,14 @@ class ProductAdmin(admin.ModelAdmin):
     search_fields = ('name', 'price')
 
 
+class RecipeAdmin(admin.ModelAdmin):
+    list_display = ('name', 'cuisine', 'classification')
+    search_fields = ('name', 'cuisine', 'classification')
+
+
 admin.site.register(Product, ProductAdmin)
 admin.site.register(InventoryItem)
-admin.site.register(Recipe)
+admin.site.register(Recipe, RecipeAdmin)
 admin.site.register(Recipes)
 admin.site.register(Shopping_list)
 admin.site.register(Check_list)

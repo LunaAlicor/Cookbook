@@ -206,3 +206,54 @@ function increaseQuantity(productId) {
     });
 }
 
+function searchProducts() {
+    const query = document.getElementById('productInput').value;
+    if (query.trim() !== '') {
+        fetch(`/api/products/?name=${query}`)
+            .then(response => response.json())
+            .then(data => {
+                displayProducts(data);
+            })
+            .catch(error => {
+                console.error('Ошибка при поиске продуктов:', error);
+            });
+    }
+}
+
+function displayProducts(products) {
+    const productList = document.getElementById('productList');
+    productList.innerHTML = '';
+
+    products.forEach(product => {
+        const listItem = document.createElement('li');
+        listItem.textContent = product.name;
+
+        const addButton = document.createElement('button');
+        addButton.textContent = 'Добавить в рецепт';
+        addButton.onclick = function() {
+            addProductToRecipe(product.id, product.name);
+        };
+
+        listItem.appendChild(addButton);
+        productList.appendChild(listItem);
+    });
+}
+
+function addProductToRecipe(productId, productName) {
+    // Логика добавления выбранного продукта к рецепту через API
+    // Напишите эту функцию в соответствии с вашими запросами к API
+    // Например, используя fetch или другой метод
+
+    // Пример:
+    fetch(`/api/recipes/${recipeId}/add_product/?product_id=${productId}`, {
+        method: 'POST',
+        // Добавьте другие параметры запроса при необходимости
+    })
+    .then(response => {
+        // Обработка успешного добавления продукта к рецепту
+        console.log('Продукт успешно добавлен к рецепту:', productName);
+    })
+    .catch(error => {
+        console.error('Ошибка при добавлении продукта к рецепту:', error);
+    });
+}
