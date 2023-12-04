@@ -3,14 +3,15 @@
 {% block title %}Рецепт {% endblock %}
 
 {% block content %}
-<h1>{{ recipe.name }}</h1>
-<h2>Необходимые ингридиенты: </h2>
-    {% for product in recipe.products.all %}
-        <li>{{ product.name }} | цена: {{product.price}}</li>
-    {% endfor %}
-    Общая стоимость блюда:
-
-<h2>{{recipe.recipe}}</h2>
-<h3>Время готовки: {{ recipe.cooking_time|time:"h:i a" }}</h3>
+    <h1>{{ recipe.name }}</h1>
+    <h2>Необходимые ингридиенты: </h2>
+        {% for product in recipe.products.all %}
+            <li>{{ product.name }} | цена: {{product.price}}</li>
+        {% endfor %}
+        Общая стоимость блюда: {{ total_cost }}
+    <pre>
+        <h2>{{recipe.recipe}}</h2>
+    </pre>
+    <h3>Время готовки: {{ recipe.cooking_time|time:"h:i a" }}</h3>
 
 {% endblock %}

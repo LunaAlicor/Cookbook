@@ -40,4 +40,6 @@ urlpatterns = [
     path('api/docs/', include_docs_urls(title='API Documentation')),
     path('api/products/', ProductSearchAPIView.as_view(), name='product_search'),
     # path('select2/', AutoResponseView.as_view(), name='django_select2'),
+    path('del_recipe/<int:recipe_id>/', views.del_recipe, name='del_recipe'),
+    path('add_recipe/<int:recipe_id>/', views.add_recipe, name='add_recipe'),
 ]

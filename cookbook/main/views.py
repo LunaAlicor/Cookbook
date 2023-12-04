@@ -4,7 +4,7 @@ from django.contrib import messages
 from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.utils import timezone
-from django.db.models import Q
+from django.db.models import Q, Sum
 from django.views import View
 from django.views.decorators.csrf import csrf_exempt
 from .filters import InventoryItemFilter
@@ -298,7 +298,8 @@ def recipes(request):
 
 def recipe_detail(request, recipe_id):
     recipe = get_object_or_404(Recipe, id=recipe_id)
-    return render(request, 'main/recipe_detail.html', {'recipe': recipe})
+    total_cost = recipe.products.aggregate(total=Sum('price'))['total'] or 0
+    return render(request, 'main/recipe_detail.html', {'recipe': recipe, 'total_cost': total_cost})
 
 
 def all_recipes(request):
@@ -368,3 +369,19 @@ class ProductSearchAPIView(APIView):
             return Response(serializer.data)
         else:
             return Response("No query provided", status=status.HTTP_400_BAD_REQUEST)
+
+
+def del_recipe(request, recipe_id):
+
+    recipes_item = get_object_or_404(Recipes, user=request.user)
+    recipe_to_delete = get_object_or_404(Recipe, id=recipe_id)
+    recipes_item.recipes.remove(recipe_to_delete)
+
+    return redirect('Recipes')
+
+
+def add_recipe(request, recipe_id):
+    recipes_item = get_object_or_404(Recipes, user=request.user)
+    recipe_to_add = get_object_or_404(Recipe, id=recipe_id)
+    recipes_item.recipes.add(recipe_to_add)
+    return redirect('Recipes')

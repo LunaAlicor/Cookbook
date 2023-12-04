@@ -3,6 +3,7 @@
 {% block title %}Все рецепты {%  endblock %}
 
 {% block content %}
+<a href="{% url 'create_recipe' %}"><button>Создать рецепт</button></a>
 {% if recipes %}
     <ul>
 
@@ -10,7 +11,10 @@
             <li>{{ item.name }}</li>
             {{ item.description}}
             <button type="button" onclick="location.href='recipe_detail/{{ item.id }}'">Перейти к рецепту</button>
-            <button>Добавить рецепт</button>
+            <form action="{% url 'add_recipe' item.id %}" method="post">
+                {% csrf_token %}
+                <button type="submit">Добавить рецепт</button>
+            </form>
         {% endfor %}
     </ul>
 {% else %}

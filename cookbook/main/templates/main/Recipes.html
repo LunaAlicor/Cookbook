@@ -11,7 +11,10 @@
             <li>{{ item.name }}</li>
             {{ item.description}}
             <button type="button" onclick="location.href='recipe_detail/{{ item.id }}'">Перейти к рецепту</button>
-            <button>Удалить рецепт</button>
+            <form action="{% url 'del_recipe' item.id %}" method="post">
+                {% csrf_token %}
+                <button type="submit">Удалить рецепт</button>
+            </form>
         {% endfor %}
     </ul>
 {% else %}
